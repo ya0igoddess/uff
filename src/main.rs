@@ -3,7 +3,7 @@ use bevy::{
     input::keyboard::keyboard_input_system, 
     sprite::{MaterialMesh2dBundle, Mesh2dHandle}
 };
-use player::{player::InputControllable, player_input::player_input};
+use player::{player::InputControllable, player_input::{camera_follow, player_input}};
 use bevy_rapier2d::prelude::*;
 
 pub mod player;
@@ -16,6 +16,7 @@ fn main() {
         .add_plugins(RapierDebugRenderPlugin::default())
         .add_systems(Update, keyboard_input_system)
         .add_systems(Update, player_input)
+        .add_systems(Update, camera_follow)
         .add_systems(Startup, setup)
         .run();
 }
@@ -35,11 +36,11 @@ fn setup(
     let tile_texture = asset_server.load("resources/graphics/tile_set_earth1.png");
 
     for i in 1i16..200i16 {
-        for j in 1i16..100i16 {
+        for j in 1i16..200i16 {
             commands.spawn((
                 SpriteBundle {
                     texture: tile_texture.clone(),
-                    transform: Transform::from_xyz(f32::try_from(i).unwrap()*16. - 500.,f32::try_from(j).unwrap()*16.- 500.,-1.),
+                    transform: Transform::from_xyz(f32::try_from(i).unwrap()*16.,f32::try_from(j).unwrap()*16.,-1.),
                     ..default()
                 },
 
