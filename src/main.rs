@@ -3,7 +3,7 @@ use bevy::{
     input::keyboard::keyboard_input_system, 
     sprite::{MaterialMesh2dBundle, Mesh2dHandle}
 };
-use player::{player::InputControllable, player_input::{camera_follow, player_input}};
+use player::{mouse_drag::{catch_drag_item, drag_item_to_cursor, release_drag_item, MouseDraggable}, player::InputControllable, player_input::{camera_follow, player_input}};
 use bevy_rapier2d::prelude::*;
 
 pub mod player;
@@ -17,6 +17,9 @@ fn main() {
         .add_systems(Update, keyboard_input_system)
         .add_systems(Update, player_input)
         .add_systems(Update, camera_follow)
+        .add_systems(Update, release_drag_item)
+        .add_systems(Update, catch_drag_item)
+        .add_systems(Update, drag_item_to_cursor)
         .add_systems(Startup, setup)
         .run();
 }
@@ -77,7 +80,8 @@ fn setup(
             ),
             ..default()
         },
-        collider)
+        collider,
+        MouseDraggable::default())
         );
     }
     commands.spawn((
@@ -90,6 +94,7 @@ fn setup(
         Collider::ball(30.0),
         RigidBody::Dynamic,
         Velocity::default(),
-        InputControllable)
+        InputControllable,
+        MouseDraggable::default())
     );
 }

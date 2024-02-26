@@ -1,4 +1,4 @@
-use bevy::{ecs::system::{Query, Res}, input::{keyboard::KeyCode, ButtonInput}, time::Time, transform::components::Transform};
+use bevy::{ecs::{query::{With, Without}, system::{Query, Res}}, input::{keyboard::KeyCode, ButtonInput}, render::camera::OrthographicProjection, time::Time, transform::components::Transform};
 use bevy_rapier2d::dynamics::Velocity;
 
 use super::player::InputControllable;
@@ -26,6 +26,15 @@ pub fn player_input(
             vel.linvel.x = pos_delta;
             vel.linvel.y = 0.;
         }
-        println!("velocity {:?}", vel)
     }
+}
+
+pub fn camera_follow(
+    mut query_camera: Query<(&OrthographicProjection, &mut Transform), Without<InputControllable>>,
+    query: Query<&Transform, With<InputControllable>>
+) {
+    let (_, mut camera) = query_camera.single_mut();
+    let pers = query.single(); 
+    camera.translation.x = pers.translation.x;
+    camera.translation.y = pers.translation.y;
 }
