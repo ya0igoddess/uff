@@ -1,4 +1,5 @@
 /target
 /resources
+/assets
 
 build_and_run_win.sh
