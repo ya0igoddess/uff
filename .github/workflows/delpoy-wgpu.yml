@@ -1,0 +1,29 @@
+name: Deploy wgpbu version
+
+on: [workflow_dispatch]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-and-delpoy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install dev libs
+      run: |
+        sudo apt-get update
+        sudo apt-get install g++ pkg-config libasound2-dev libudev-dev libxkbcommon-dev
+    - name: Install wasm tool
+      run: |
+        rustup target add wasm32-unknown-unknown
+        cargo install wasm-bindgen-cli
+    - name: Build wasm release
+      run: cargo build --release --target wasm32-unknown-unknown
+    - name: Run bindgen
+      run: | 
+          wasm-bindgen --out-name bevy_app \ 
+          --out-dir target/wasm \
+          --target web target/wasm32-unknown-unknown/release/uff.wasm
