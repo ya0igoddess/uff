@@ -19,7 +19,7 @@ jobs:
     - name: Install Wayland dev
       run: |
         sudo apt-get update
-        sudo apt-get install libwayland-dev
+        sudo apt-get install g++ pkg-config libx11-dev libasound2-dev libudev-dev libxkbcommon-x11-0 libwayland-dev libxkbcommon-dev
     - name: Build
       run: cargo build --verbose
     - name: Run tests
